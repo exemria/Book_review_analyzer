@@ -28,7 +28,7 @@ def drop_all_tables(cur,tables):
 # create table from csv file
 
 def create_table_books(cur):
-    cur.execute("""CREATE TABLE IF NOT EXISTS "books" (
+    cur.execute("""CREATE TABLE books (
         rank VARCHAR(50),
         book_title VARCHAR(50),
         book_price VARCHAR(50),
