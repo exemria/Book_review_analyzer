@@ -30,13 +30,13 @@ def drop_all_tables(cur,tables):
 def create_table_books(cur):
     cur.execute("""CREATE TABLE IF NOT EXISTS books (
         rank VARCHAR(50),
-        book title VARCHAR(50),
-        book price VARCHAR(50),
+        book_title VARCHAR(50),
+        book_price VARCHAR(50),
         rating INTEGER,
         author VARCHAR(50),
-        year of publication INTEGER,
+        year_of_publication INTEGER,
         genre VARCHAR(50),
-        url VARCHAR(100),
+        url VARCHAR(100)
     )
     """)
     
@@ -48,13 +48,13 @@ def insert_data_from_csv(cur, file_url):
         for row in reader:
             cur.execute("""INSERT INTO books (
                 rank,
-                book title,
-                book price,
+                book_title,
+                book_price,
                 rating,
                 author,
-                year of publication,
+                year_of_publication,
                 genre,
-                url )
+                url)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s)
                     """,row)
 
@@ -71,21 +71,21 @@ def main():
         tables = get_table_list(cur)
 
         drop_all_tables(cur,tables)
-    except Exception:
-        print("Something wrong")
+    except Exception as e:
+        print("Error dropping tables:", e)
     
     try:
         csv_file_url = r'C:\Users\konra\Desktop\Top-100 Trending Books.csv'
         create_table_books(cur)
-    except Exception:
-        print("no table created")
+    except Exception as e:
+        print("Error no table created", e)
 
     try:
         insert_data_from_csv(cur, csv_file_url)
-    except Exception:
-        print("problem with inserting data from csv")
+    except Exception as e:
+        print("Error inserting data from csv", e)
+    
     conn.commit()
-
     cur.close()
     conn.close()
 
