@@ -82,24 +82,6 @@ def create_table_reviews(self):
     ''')
     self.conn.commit()
     
-    #--FOREIGN KEY ("book_name") REFERENCES "books"("book_title")--
-    
-#def create_books_dictionary(self):
-#    books_data = {}
-#
-#    try:
-#        self.cur.execute("SELECT * FROM books")
-#        books_rows = self.cur.fetchall()
-#
-#        for row in books_rows:
-#            book_title = row[1]  # book_title is at index 1
-#            books_data[book_title] = row
-#
-#    except Exception as e:
-#        print("Error fetching data from 'books' table:", e)
-#
-#    return books_data
-
 
 def insert_data_from_csv(self, file_path1,   file_path2):
     books_data = {}
