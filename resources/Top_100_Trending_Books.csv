@@ -1,4 +1,4 @@
-Rank,book_title,book price,rating,author,year_of_publication,genre,url
+Rank,book_title,book_price,rating,author,year_of_publication,genre,url
 1,"Iron Flame (The Empyrean, 2)",18.42,4.1,Rebecca Yarros,2023,Fantasy Romance,amazon.com/Iron-Flame-Empyrean-Rebecca-Yarros/dp/1649374178/ref=zg_bs_g_books_sccl_1/143-9831347-1043253?psc=1
 2,The Woman in Me,20.93,4.5,Britney Spears,2023,Memoir,amazon.com/Woman-Me-Britney-Spears/dp/1668009048/ref=zg_bs_g_books_sccl_2/143-9831347-1043253?psc=1
 3,My Name Is Barbra,31.5,4.5,Barbra Streisand,2023,Autobiography,amazon.com/My-Name-Barbra-Streisand/dp/0525429522/ref=zg_bs_g_books_sccl_3/143-9831347-1043253?psc=1
