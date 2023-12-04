@@ -56,14 +56,16 @@ class Db_books_review:
     def create_table_books(self):
         self.cur.execute('''
             CREATE TABLE "books" (
+            
             "rank" FLOAT,
-            "book_title" VARCHAR(255) PRIMARY KEY,
+            "book_title" VARCHAR(255) primary key,
             "book_price" VARCHAR(255),
             "rating" FLOAT,
             "author" VARCHAR(255),
             "year_of_publication" TEXT,
             "genre" VARCHAR(255),
             "url" VARCHAR(255)
+        
         )
         ''')
         self.conn.commit()
