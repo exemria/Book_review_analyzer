@@ -13,7 +13,7 @@ class Book:
         self.year_of_publication = year_of_publication
         self.genre = genre
         self.url = url
-        self.review = list[Review]
+        self.review = []
     
     
 class Review:
