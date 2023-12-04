@@ -113,36 +113,33 @@ class Db_books_review:
             else:
                 print("Error inserting data into the books table:", e)
 
-        book_name = []
+       
         with open(file_path2, 'r', encoding='utf-8') as reviews_csv:
             reviews_reader = csv.reader(reviews_csv)
             next(reviews_reader)
             
             for review_row in reviews_reader:
                 # if book_name exists in the books_data, proceed with insertion into reviews table
-                review_book = review_row[1]
-                book_name.append(review_book)
+                book_name = review_row[1]
                
 
-                for book in book_name:
-
-                    if book in books_data.values():
-                        # Convert date string to a numeric representation (timestamp)
-                        date_str = review_row[7]  # Assuming date is at index 7
-                        try:
-                            date_numeric = datetime.strptime(date_str, '%d-%m-%Y').timestamp()
-                        except ValueError:
-                            date_numeric = None
-                        review_row[7] = date_numeric
-                        self.cur.execute("""
-                            INSERT INTO reviews (Sno, book_name, review_title, reviewer, rating,
-                                                review_description, js_verified, date, timestamp, ASIN)
-                            VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                        """, review_row)
-                        self.conn.commit()
-                        #print(f"Book {book_name} added.")
-                    else:
-                        None #print(f"Book {book_name} does not exist in the books_data. Skipping insertion into 'reviews'.")
+                if book_name in books_data:
+                    # Convert date string to a numeric representation (timestamp)
+                    date_str = review_row[7]  # Assuming date is at index 7
+                    try:
+                        date_numeric = datetime.strptime(date_str, '%d-%m-%Y').timestamp()
+                    except ValueError:
+                        date_numeric = None
+                    review_row[7] = date_numeric
+                    self.cur.execute("""
+                        INSERT INTO reviews (Sno, book_name, review_title, reviewer, rating,
+                                            review_description, js_verified, date, timestamp, ASIN)
+                        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    """, review_row)
+                    self.conn.commit()
+                    print(f"Book {book_name} added.")
+                else:
+                    print(f"Book {book_name} does not exist in the books_data. Skipping insertion into 'reviews'.")
             #print(f" {book_name}")
 
 def main():
