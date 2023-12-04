@@ -3,18 +3,7 @@ import psycopg2
 
 
 class Book:
-    rank : int
-    title : str
-    price : float
-    rating : float
-    author : str
-    year_of_publication : float
-    genre : str
-    url : str
-
-
-
-
+ 
     def __init__(self, rank, title, price, rating, author, year_of_publication, genre, url, review) -> None:
         self.rank = rank
         self.title = title
@@ -28,18 +17,7 @@ class Book:
     
     
 class Review:
-    sno : float
-    name : str
-    title : str
-    reviewer : str
-    rating : float
-    description : str
-    js_verified : str 
-    date : float 
-    timestamp : float 
-    asin : str
     
-
     def __init__ (self, sno, name, title, reviewer, rating, description, js_verified, date, timestamp, asin):
         self.sno = sno
         self.name = name
