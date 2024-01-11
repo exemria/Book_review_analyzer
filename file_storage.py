@@ -3,7 +3,7 @@ import psycopg2
 from datetime import datetime
 from setup_tables import *
 
-def books_data_dict(self, file_path1) -> dict: 
+def books_data_dict(file_path1) -> dict: 
     books_data = {}
     with open(file_path1, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
@@ -14,6 +14,16 @@ def books_data_dict(self, file_path1) -> dict:
             books_data[book_title] = row
 
         return books_data
+
+def insert_book(self, book_data):
+    try:
+        self.cur.execute("""
+            INSERT INTO books (rank, book_title, book_price, rating, author, year_of_publication, genre, url)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+        """, book_data)
+        self.conn.commit()
+    except Exception as e:
+        print(f"Error inserting book {book_data}: {e}")
 
 def insert_books_data(self, file_path):
     try:
@@ -28,18 +38,6 @@ def insert_books_data(self, file_path):
             print("Duplicate book_title found. Handling duplicate...")
         else:
             print("Error inserting data into the books table:", e)
-
-def insert_book(self, book_data):
-    try:
-        self.cur.execute("""
-            INSERT INTO books (rank, book_title, book_price, rating, author, year_of_publication, genre, url)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-        """, book_data)
-        self.conn.commit()
-    except Exception as e:
-        print(f"Error inserting book {book_data}: {e}")
-
-
 
 def insert_review_data(self, file_path):
     books_dict = books_data_dict()

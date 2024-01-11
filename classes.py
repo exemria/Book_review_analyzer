@@ -1,27 +1,26 @@
-import datetime
+from datetime import datetime
 import psycopg2
 from typing import List
-from setup_tables import Db_books_review
 
 class Review:
     sno: int
     name: str
     reviewer: str
-    rating: int
+    rating: float
     description: str
     js_verified: str
-    date: datetime.datetime
+    date: datetime
     timestamp: str
     asin: int
     
-    def _init_ (self,
+    def __init__ (self,
                   sno: int,
                   name: str,
                   reviewer: str,
-                  rating: int,
+                  rating: float,
                   description: str,
                   js_verified: str,
-                  date: datetime.datetime,
+                  date: datetime,
                   timestamp: str,
                   asin: int):
         
@@ -41,18 +40,18 @@ class Book:
     price: float
     rating: float
     author: str
-    year_of_publication: datetime.datetime
+    year_of_publication: datetime
     genre: str
     url: str
     reviews: list[Review]
  
-    def _init_(self,
+    def __init__(self,
                  rank: float,
                  title:str,
                  price: float,
                  rating: float,
                  author: str,
-                 year_of_publication: datetime.datetime,
+                 year_of_publication: datetime,
                  genre: str,
                  url: str,
                  ):
@@ -67,49 +66,57 @@ class Book:
         self.url = url
         self.reviews =  []
     
-    def _str_(self) -> str:
-        return f'{self.author}'
+    def __str__(self) -> str:
+        return (f'{self.author}')
+        #,self.rank = rank
+        #self.title = title
+        #self.price = price
+        #self.rating = rating
+        #self.author = author
+        #self.year_of_publication = year_of_publication
+        #self.genre = genre
+        #self.url = url
+        #self.reviews'
         
     def add_review(self, review):
         self.reviews.append(review)
         
     def average_rating(self) -> float:
-        sum = 0
-        for review in self.reviews:
-            sum += review.rating
-        return sum / len(self.reviews)
+        total_rating = sum(review.rating for review in self.reviews)
+        return total_rating / len(self.reviews) if self.reviews else 0.0
 
     def get_review_count(self) -> int:
         return len(self.reviews)
-        
-def print_book(book : Book):
-    print(f'{book.author}')
     
-        
 def load_books() -> List[Book]:
-    conn = psycopg2.connect(
-    dbname='postgres', user='postgres', password='1234', host='localhost', port='5432'
-    )
+    conn = psycopg2.connect(dbname='amazon', user='postgres', password='5329', host='localhost', port='5432')
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM books")
     books_data = cursor.fetchall()
     books = []
     for book_data in books_data:
-        rank,title,price,rating,author,year_of_publication,genre,url= book_data
+        rank = book_data[0]
+        title = book_data[1]
+        price = float(book_data[2])
+        rating = book_data[3]
+        author = book_data[4]
+        year_of_publication = book_data[5]
+        genre = book_data[6]
+        url = book_data[7]
         book = Book(rank,title,price,rating,author,year_of_publication,genre,url)
         print(book)
-        cursor.execute("SELECT sno, name, reviewer, rating, description, js_verified, date, timestamp, asin FROM reviews WHERE book_name = %s", (title,))
+        cursor.execute("SELECT sno, review_title, reviewer, rating, review_description, js_verified, date, timestamp, asin FROM reviews WHERE book_name = %s", (title,))
         reviews_data = cursor.fetchall()
         for review_data in reviews_data:
             sno = review_data[0]
-            name = review_data[2]
-            reviewer = review_data[3]
-            rating = review_data[4]
-            description = review_data[5]
-            js_verified = review_data[6]
-            date = review_data[7]
-            timestamp = review_data[8]
-            asin = review_data[9]  
+            name = review_data[1]
+            reviewer = review_data[2]
+            rating = review_data[3]
+            description = review_data[4]
+            js_verified = review_data[5]
+            date = review_data[6]
+            timestamp = review_data[7]
+            asin = review_data[8] 
             book.add_review(Review(sno,name,reviewer,rating,description,js_verified,date,timestamp,asin))
         books.append(book)
 
@@ -117,7 +124,7 @@ def load_books() -> List[Book]:
 
     return books
 
-def count_books(books_with_reviews):
+def count_books(books_with_reviews: list[Book]):
     return len(books_with_reviews)
 
 def count_first_book_reviews_not_oop(books_with_reviews: list[Book]):
@@ -126,7 +133,49 @@ def count_first_book_reviews_not_oop(books_with_reviews: list[Book]):
 def count_first_book_reviews(books_with_reviews: list[Book]):
     return books_with_reviews[0].get_review_count()
 
-# ilosc recenzji pierwszej ksiazki na lisscie
+def avarage_book_price(books_with_reviews: list[Book]):
+    total_price = sum(book.price for book in books_with_reviews)
+    avarage_price = total_price / len(books_with_reviews) if books_with_reviews else 0.0
+    return avarage_price
+
+def print_reviews_for_book(books: List[Book]):
+    found = False
+    for book in books:
+        found = True
+        print(f"Reviews for '{book.title}':")
+        for index, review in enumerate(book.reviews, start=1):
+            print(f"Review {index}:")
+            print(f"Sno: {review.sno}")
+            print(f"Name: {review.name}")
+            print(f"Reviewer: {review.reviewer}")
+            print(f"Rating: {review.rating}")
+            print(f"Description: {review.description}")
+            print(f"js_verified: {review.js_verified}")
+            print(f"timestamp: {review.timestamp}")
+            print(f"asin: {review.asin}")
+
+            print("==============================")
+    if not found:
+        print("No books found.")
+
+def best_worst_rating_book(books_with_reviews: list[Book]) ->tuple:
+    reviews = [review for book in books_with_reviews for review in book.reviews]
+    max_review = max(reviews, key=lambda review: review.rating, default=None)
+    min_review = min(reviews, key=lambda review: review.rating)
+
+    max_rating = max_review.rating if max_review else 0
+    min_rating = min_review.rating if min_review else 0
+
+    max_author = next((book.author for book in books_with_reviews if max_review in book.reviews), None)
+    min_author = next((book.author for book in books_with_reviews if min_review in book.reviews), None)
+
+    return (max_rating, max_author), (min_rating, min_author)
+
+#Znajdź autorów, którzy mają na tej liście więcej niż 1 książkę oraz podaj ich wraz z
+#liczbą ich książek na liście w kolejności od największej ilości książek. Gdyby było ich
+#dużo ogranicz się do 5 autorów o największej ilości książek
+# def how_many_autors_books(books_with_reviews):
+# if booktitle >1: return author
 
 books_with_reviews = load_books()
 
@@ -135,3 +184,11 @@ print(how_many)
 
 first_book_review_count = count_first_book_reviews(books_with_reviews)
 print(first_book_review_count)
+
+av_book_price = avarage_book_price(books_with_reviews)
+print(av_book_price)
+
+
+ratings = best_worst_rating_book(books_with_reviews)
+print(ratings)
+print_reviews_for_book(books_with_reviews)

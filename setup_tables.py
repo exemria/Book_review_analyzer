@@ -12,7 +12,7 @@ class Db_books_review:
         self.password = password
         self.host = host
         self.port = port
-        self.con = None
+        self.conn = None
         self.cur = None
 
 
@@ -26,7 +26,7 @@ class Db_books_review:
         )
         self.cur = self.conn.cursor()
         
-    def disconnect(self): # disconnect database
+    def disconnect(self): 
         if self.cur:
             self.cur.close()
         if self.conn:
@@ -38,8 +38,6 @@ class Db_books_review:
     def execute(self):
         self.cur.execute()
 
-      
-# download all tables from database amazon if exists
     def get_table_list(self):
         self.cur.execute("""
             SELECT table_name
@@ -56,7 +54,6 @@ class Db_books_review:
     def create_table_books(self):
         self.cur.execute('''
             CREATE TABLE "books" (
-            
             "rank" FLOAT,
             "book_title" VARCHAR(255) primary key,
             "book_price" VARCHAR(255),
@@ -105,11 +102,9 @@ class Db_books_review:
                     book_title = row[1]
                     books_data[book_title] = row
             
-                    #print(books_data)
         except psycopg2.IntegrityError as e:
             if 'duplicate key value violates unique constraint "books_pkey"' in str(e):
                 print("Duplicate book_title found. Handling duplicate...")
-                # Handle the duplicate entry: update existing record or skip insertion
             else:
                 print("Error inserting data into the books table:", e)
 
@@ -178,10 +173,8 @@ def main():
 
     try:
         
-        #relative_path_to_bookscsv = "resources\Top_100_Trending_Books.csv"
-       # relative_path_to_reviewscsv = r"resources\customer_reviews.csv"
-        csv_file_books_path = return_absolute_path( "resources\Top_100_Trending_Books.csv")
-        csv_file_reviews_path = return_absolute_path('resources\customer_reviews.csv')
+        csv_file_books_path = return_absolute_path( r"resources\Top_100_Trending_Books.csv")
+        csv_file_reviews_path = return_absolute_path(r'resources\customer_reviews.csv')
         
         db_action.insert_data_from_csv(csv_file_books_path, csv_file_reviews_path)
 
