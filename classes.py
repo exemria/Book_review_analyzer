@@ -77,6 +77,9 @@ class Book:
         #self.genre = genre
         #self.url = url
         #self.reviews'
+
+    def get_author(self):
+        return self.author
         
     def add_review(self, review):
         self.reviews.append(review)
@@ -171,11 +174,47 @@ def best_worst_rating_book(books_with_reviews: list[Book]) ->tuple:
 
     return (max_rating, max_author), (min_rating, min_author)
 
-#Znajdź autorów, którzy mają na tej liście więcej niż 1 książkę oraz podaj ich wraz z
-#liczbą ich książek na liście w kolejności od największej ilości książek. Gdyby było ich
-#dużo ogranicz się do 5 autorów o największej ilości książek
-# def how_many_autors_books(books_with_reviews):
-# if booktitle >1: return author
+def book_with_most_reviews(books_with_reviews: list[Book]) -> tuple: # not sure if it's works correct
+    count_authors_reviews = {}
+    for book in books_with_reviews:
+        for review in book.reviews:
+            author = book.author
+            if author in count_authors_reviews:
+                count_authors_reviews[author] += 1
+            else:
+                count_authors_reviews[author] = 1
+
+    max_amout_of_reviews ={key : val for key, val in sorted(count_authors_reviews.items(), key =lambda x: x[1], reverse = True )}
+    first_element = next(iter(max_amout_of_reviews.items()))
+    return first_element
+
+def year_of_publication_defference(books_with_reviews: list[Book]) -> int:
+    years = [book.year_of_publication for book in books_with_reviews]
+    max_year = int(max(years))
+    min_year = int(min(years))
+    result = max_year - min_year
+    return result
+
+def get_most_fertile_authors(books_with_reviews: list[Book]) -> tuple:
+    count_author_books = {}
+    for book in books_with_reviews:
+        author = book.author
+        if author in count_author_books:
+            count_author_books[author] += 1
+        else:
+            count_author_books[author] = 1
+
+    sorted_dict = {key : val for key, val in sorted(count_author_books.items(), key =lambda x: x[1], reverse = True )}
+    res = dict(list(sorted_dict.items())[0: 5])
+    return res
+
+
+    
+
+    #def get_books_of_author(self) -> dict:
+    #    books_and_authors = {}
+    #        books_and_authors[self.author] = self.title
+    #    return books_with_reviews
 
 books_with_reviews = load_books()
 
@@ -188,7 +227,14 @@ print(first_book_review_count)
 av_book_price = avarage_book_price(books_with_reviews)
 print(av_book_price)
 
+authors_books = get_most_fertile_authors(books_with_reviews)
+print(authors_books)
 
 ratings = best_worst_rating_book(books_with_reviews)
 print(ratings)
-print_reviews_for_book(books_with_reviews)
+#print_reviews_for_book(books_with_reviews)
+defference = year_of_publication_defference(books_with_reviews)
+print(defference)
+
+max_reviews = book_with_most_reviews(books_with_reviews)
+print(max_reviews)
