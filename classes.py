@@ -195,6 +195,29 @@ def year_of_publication_defference(books_with_reviews: list[Book]) -> int:
     result = max_year - min_year
     return result
 
+def book_with_no_review(books_with_reviews: list[Book]) -> str:
+    for book in books_with_reviews:
+        has_review = any(book.reviews)
+        if not has_review:
+            return book.title
+    return None
+
+def most_fertile_reviewer(books_with_reviews: List[Book]) -> str:
+    count_reviewers = {}
+    for book in books_with_reviews:
+        for review in book.reviews:
+            reviewer = review.reviewer
+            if reviewer in count_reviewers:
+                count_reviewers[reviewer] += 1
+            else:
+                count_reviewers[reviewer] = 1
+
+    max_reviews = max(count_reviewers.items(), key=lambda x: x[1], default=None)
+    if max_reviews:
+        return max_reviews[0]
+    else:
+        return "No reviewers found."
+
 def get_most_fertile_authors(books_with_reviews: list[Book]) -> tuple:
     count_author_books = {}
     for book in books_with_reviews:
@@ -238,3 +261,9 @@ print(defference)
 
 max_reviews = book_with_most_reviews(books_with_reviews)
 print(max_reviews)
+
+no_review = book_with_no_review(books_with_reviews)
+print(no_review)
+
+rev = most_fertile_reviewer(books_with_reviews)
+print(rev)
