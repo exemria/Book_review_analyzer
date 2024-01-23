@@ -2,6 +2,7 @@ import pytest
 from classes import *
 from datetime import datetime
 
+# zrobić funkcje na instancje Book i na books_with_reviews i wtedy uprościć testy
 
 def test_avarage_rating():
     book = Book(rank =1, title="Iron Flame (The Empyrean, 2)",price =18.42,rating =4.1,author='Rebecca Yarros',year_of_publication=2023,genre='Fantasy Romance',url ='amazon.com/Iron-Flame-Empyrean-Rebecca-Yarros/dp/1649374178/ref=zg_bs_g_books_sccl_1/143-9831347-1043253?psc=1')
