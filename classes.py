@@ -128,6 +128,8 @@ def load_books() -> List[Book]:
     return books
 
 def count_books(books_with_reviews: list[Book]):
+    if not isinstance(books_with_reviews, list):
+        raise TypeError("Input must be a list of books.")
     return len(books_with_reviews)
 
 def count_first_book_reviews_not_oop(books_with_reviews: list[Book]):
